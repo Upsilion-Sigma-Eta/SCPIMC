@@ -24,6 +24,9 @@ namespace SCPIMCMain.Model
         public Task<EDeviceConnectionStatus> DisconnectAsync(CancellationToken cts);
 
         public Task SendCommandAsync(string command, bool isQueryCommand, CancellationToken cts);
-        public Task ReceiveCommandAsync(CancellationToken cts);
+        public Task<string> ReceiveCommandAsync(CancellationToken cts);
+
+        public void SendCommand(string command, bool isQueryCommand);
+        public void ReceiveCommand(uint timeout);
     }
 }
