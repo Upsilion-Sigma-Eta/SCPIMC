@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SCPIMCMain.Common.Enum;
 
-namespace SCPIMCMain.Model
+namespace SCPIMCMain.Model.Interface
 {
     public interface IDeviceModel
     {
@@ -14,7 +14,7 @@ namespace SCPIMCMain.Model
         public string IPAddress { get; set; }
         public int Port { get; set; }
 
-        public EDeviceConnectionStatus ConnectionStatus { get; set; };
+        public EDeviceConnectionStatus ConnectionStatus { get; set; }
         public EDeviceConnectionStatus Connect(string ipAddress, int port);
         public EDeviceConnectionStatus Connect();
         public EDeviceConnectionStatus Disconnect();

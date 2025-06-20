@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SCPIMCMain.Model.Interface
 {
-    internal interface ILoadable
+    public interface ILoadable
     {
+        public string Load(string filePath);
     }
 }
+ 

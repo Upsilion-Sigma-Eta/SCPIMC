@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:SCPIMCMain"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!-- Modern styles -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="View/Style/ModernStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

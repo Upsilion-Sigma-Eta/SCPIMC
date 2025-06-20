@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-debug",
+            "program": "${workspaceFolder}/SourceCode/SCPIMCMain/SCPIMCMain/bin/Debug/net8.0-windows/SCPIMCMain.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/SourceCode/SCPIMCMain/SCPIMCMain",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch (Release)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-release",
+            "program": "${workspaceFolder}/SourceCode/SCPIMCMain/SCPIMCMain/bin/Release/net8.0-windows/SCPIMCMain.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/SourceCode/SCPIMCMain/SCPIMCMain",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        }
+    ]
+}

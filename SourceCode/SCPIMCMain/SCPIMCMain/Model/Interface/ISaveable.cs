@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SCPIMCMain.Model.Interface
 {
-    internal interface ISaveable
+    public interface ISaveable
     {
+        public void Save(string filePath, string jsonContent, bool isBinary = false);
     }
 }
