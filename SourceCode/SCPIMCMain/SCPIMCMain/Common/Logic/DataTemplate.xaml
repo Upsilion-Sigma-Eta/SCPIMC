@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:view="clr-namespace:SCPIMCMain.View"
+                    xmlns:viewModel="clr-namespace:SCPIMCMain.ViewModel">
+    <DataTemplate DataType="{x:Type viewModel:MainControlPanelViewModel}">
+        <view:MainControlPanelView />
+    </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="SCPIMCMain.View.MainControlPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SCPIMCMain.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <!-- 1. 3 열 구조 추가 -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 2. 좌측 설정 패널 -->
+        <Grid Grid.Column="0"
+              Width="320"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Margin="5, 5, 5, 5">
+            <!-- 열 정의: Label / TextBox -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 행 정의: IP, Port, Button -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Device IP -->
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="Device IP:"
+                       VerticalAlignment="Center"
+                       Margin="0,0,10,5"/>
+            <TextBox  Grid.Row="0" Grid.Column="1"
+                      x:Name="IpTextBox"
+                      Width="180"
+                      Margin="0,0,0,5"/>
+
+            <!-- Port -->
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="Port:"
+                       VerticalAlignment="Center"
+                       Margin="0,0,10,5"/>
+            <TextBox  Grid.Row="1" Grid.Column="1"
+                      x:Name="PortTextBox"
+                      Width="180"
+                      Margin="0,0,0,5"/>
+
+            <!-- Connect Button -->
+            <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                    Content="Connect"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,10,0,0"/>
+        </Grid>
+
+        <!-- ...나머지 열(중앙/우측)에 들어갈 콘텐츠는 필요 시 추후 추가... -->
+    </Grid>
+</UserControl>
