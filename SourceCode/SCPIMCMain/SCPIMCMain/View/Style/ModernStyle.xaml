@@ -95,6 +95,15 @@
         </Setter>
     </Style>
 
+    <!-- Border control style for consistent content panels -->
+    <Style x:Key="ContentBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource LightBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryDarkBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="8"/>
+    </Style>
+
     <!-- Other controls can be added similarly -->
 
 </ResourceDictionary>
