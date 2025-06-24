@@ -20,7 +20,7 @@ namespace SCPIMCMain.Model.Interface
         public EDeviceConnectionStatus Disconnect();
 
         public Task<EDeviceConnectionStatus> ConnectAsync(string ipAddress, int port, CancellationToken cts);
-        public Task<EDeviceConnectionStatus> CoonectASync(CancellationToken cts);
+        public Task<EDeviceConnectionStatus> ConnectAsync(CancellationToken cts);
         public Task<EDeviceConnectionStatus> DisconnectAsync(CancellationToken cts);
 
         public Task SendCommandAsync(string command, bool isQueryCommand, CancellationToken cts);

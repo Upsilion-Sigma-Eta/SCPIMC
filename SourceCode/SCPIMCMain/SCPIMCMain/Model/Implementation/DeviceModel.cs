@@ -1,4 +1,8 @@
+using System.Diagnostics;
+using System.IO;
 using System.Net.Sockets;
+using System.Text;
+using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
 using SCPIMCMain.Common.Enum;
@@ -156,54 +160,234 @@ namespace SCPIMCMain.Model.Implementation
             }
         }
 
-        public Task<EDeviceConnectionStatus> ConnectAsync(string ipAddress, int port, CancellationToken cts)
+        public async Task<EDeviceConnectionStatus> ConnectAsync(string ipAddress, int port, CancellationToken cts)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (IPAddress == null)
+                {
+                    _ipAddress = ipAddress;
+                }
+                if (Port == 0)
+                {
+                    _port = port;
+                }
+
+                EDeviceConnectionStatus result = await ConnectAsync(cts);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can not connect to host device. Reason: {ex.Message}");
+
+                if (_connectionStatus == EDeviceConnectionStatus.Connecting)
+                {
+                    await DisconnectAsync(cts);
+                }
+
+                return _connectionStatus;
+            }
         }
 
-        public Task<EDeviceConnectionStatus> CoonectASync(CancellationToken cts)
+        public async Task<EDeviceConnectionStatus> ConnectAsync(CancellationToken cts)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_tcpClient == null)
+                {
+                    _tcpClient = new TcpClient(IPAddress, Port);
+
+                    _connectionStatus = EDeviceConnectionStatus.Disconnected;
+
+                    if (_tcpClient != null)
+                    {
+                        _connectionStatus = EDeviceConnectionStatus.Connecting;
+
+                        await _tcpClient.ConnectAsync(IPAddress, Port);
+
+                        if (_tcpClient.Connected)
+                        {
+                            _connectionStatus = EDeviceConnectionStatus.Connected;
+
+                            return _connectionStatus;
+                        }
+                        else
+                        {
+                            _connectionStatus = EDeviceConnectionStatus.Disconnected;
+
+                            return _connectionStatus;
+                        }
+                    }
+                }
+
+                return _connectionStatus;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can not connect to host device. Reason: {ex.Message}");
+
+                if (_connectionStatus == EDeviceConnectionStatus.Connecting)
+                {
+                    await DisconnectAsync(cts);
+                }
+
+                return _connectionStatus;
+            }
         }
 
         public EDeviceConnectionStatus Disconnect()
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_tcpClient == null)
+                {
+                    throw new Exception($"No connection to the host");
+                }
+
+                _connectionStatus = EDeviceConnectionStatus.Disconnecting;
+
+                _tcpClient.Dispose();
+                _tcpClient = null;
+
+                _connectionStatus = EDeviceConnectionStatus.Disconnected;
+
+                return _connectionStatus;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can not disconnect from host device. Reason: {ex.Message}");
+
+                return _connectionStatus;
+            }
         }
 
-        public Task<EDeviceConnectionStatus> DisconnectAsync(CancellationToken cts)
+        public async Task<EDeviceConnectionStatus> DisconnectAsync(CancellationToken cts)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return Disconnect();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can not disconnect from host device. Reason: {ex.Message}");
+
+                return _connectionStatus;
+            }
         }
 
         public string Load(string filePath)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
 
-        public void ReceiveCommand(uint timeout)
+        public string ReceiveCommand(uint timeout)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_tcpClient == null || !_tcpClient.Connected)
+                {
+                    throw new Exception($"No connection made to host.");
+                }
+
+                if (_tcpClient.GetStream() is NetworkStream stream)
+                {
+                    if (stream.CanRead)
+                    {
+                        byte[1024] buffer = new byte[1024];
+                        int readedCount = stream.Read(buffer, 0, 1024);
+
+                        if (readedCount <= 0)
+                        {
+                            throw new Exception($"There is nothing to read.");
+                        }
+
+                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readedCount);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can not receive anything from the host device. Reason: {ex.Message}");
+            }
         }
 
-        public Task<string> ReceiveCommandAsync(CancellationToken cts)
+        public async Task<string> ReceiveCommandAsync(CancellationToken cts)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_tcpClient == null || !_tcpClient.Connected)
+                {
+                    throw new Exception($"No connection made to host.");
+                }
+
+                if (_tcpClient.GetStream() is NetworkStream stream)
+                {
+                    if (stream.CanRead)
+                    {
+                        byte[1024] buffer = new byte[1024];
+                        int readedCount = stream.Read(buffer, 0, 1024);
+
+                        if (readedCount <= 0)
+                        {
+                            throw new Exception($"There is nothing to read.");
+                        }
+
+                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readedCount);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can not receive anything from the host device. Reason: {ex.Message}");
+            }
         }
 
         public void Save(string filePath, string jsonContent, bool isBinary = false)
         {
-            throw new NotImplementedException();
+
         }
 
         public void SendCommand(string command, bool isQueryCommand)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_tcpClient == null || _tcpClient.Connected == false)
+                {
+                    throw new Exception($"Not connected to host.");
+                }
+
+                if (_tcpClient.GetStream() is NetworkStream stream)
+                {
+                    stream.Write(UTF8Encoding.ASCII.GetBytes(command));
+                    stream.Flush();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can't send a command {command} Reason: {ex.Message}");
+            }
         }
 
-        public Task SendCommandAsync(string command, bool isQueryCommand, CancellationToken cts)
+        public async Task SendCommandAsync(string command, bool isQueryCommand, CancellationToken cts)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (_tcpClient == null || _tcpClient.Connected == false)
+                {
+                    throw new Exception($"Not connected to host.");
+                }
+
+                if (_tcpClient.GetStream() is NetworkStream stream)
+                {
+                    stream.WriteAsync(UTF8Encoding.ASCII.GetBytes(command));
+                    stream.FlushAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can't send a command {command} Reason: {ex.Message}");
+            }
         }
     }
 }
