@@ -1,9 +1,10 @@
-﻿<UserControl x:Class="SCPIMCMain.View.MainControlPanelView"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SCPIMCMain.View"
+             xmlns:Controls="clr-namespace:SCPIMCMain.View.Controls" x:Class="SCPIMCMain.View.MainControlPanelView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -54,7 +55,7 @@
                            Margin="5,5,5,5"
                            IsHitTestVisible="False" VerticalAlignment="Center">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Text, ElementName=IpTextBox}" Value="">
@@ -80,7 +81,7 @@
                            Margin="5,5,5,5"
                            IsHitTestVisible="False" VerticalAlignment="Center">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Text, ElementName=PortTextBox}" Value="">
@@ -116,7 +117,7 @@
                                Margin="8,6,0,0"
                                IsHitTestVisible="False">
                         <TextBlock.Style>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Text, ElementName=SendCommandTextBox}" Value="">
@@ -148,7 +149,7 @@
                            Margin="8,6,0,0"
                            IsHitTestVisible="False">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Text, ElementName=ReceivedCommandTextBox}" Value="">
@@ -163,7 +164,7 @@
                         ItemsSource="{Binding TabItemModelCollection}"
                         SelectedItem="{Binding SelectedTabItemModel}">
                 <TabControl.ItemContainerStyle>
-                    <Style TargetType="TabItem">
+                    <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Header" Value="{Binding Header}"/>
                         <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
                     </Style>
@@ -190,27 +191,8 @@
                     </Grid.RowDefinitions>
                     <Label Content="Sended Message Log" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     <!-- 변경: Sended Message Log TextBox → Watermark 처리 -->
-                    <Grid Grid.Row="1">
-                        <TextBox x:Name="SendedMessageLogTextBox"
-                                 Margin="5,5,5,5"
-                                 TextWrapping="Wrap"/>
-                        <TextBlock Text="Sended messages will appear here"
-                                   Foreground="LightGray"
-                                   FontStyle="Italic"
-                                   Margin="8,6,0,0"
-                                   IsHitTestVisible="False">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, ElementName=SendedMessageLogTextBox}" Value="">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Grid>
+                    <Grid Grid.Row="1"/>
+                    <ContentControl Grid.Row="1" Content="{Binding SendedMessageLogPanel}"/>
                 </Grid>
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
@@ -219,27 +201,8 @@
                     </Grid.RowDefinitions>
                     <Label Content="Received Message Log" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     <!-- 변경: Received Message Log TextBox → Watermark 처리 -->
-                    <Grid Grid.Row="1">
-                        <TextBox x:Name="ReceivedMessageLogTextBox"
-                                 Margin="5,5,5,5"
-                                 TextWrapping="Wrap"/>
-                        <TextBlock Text="Received messages will appear here"
-                                   Foreground="LightGray"
-                                   FontStyle="Italic"
-                                   Margin="8,6,0,0"
-                                   IsHitTestVisible="False">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, ElementName=ReceivedMessageLogTextBox}" Value="">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Grid>
+                    <Grid Grid.Row="1"/>
+                    <ContentControl Grid.Row="1" Content="{Binding ReceivedMessageLogPanel}"/>
                 </Grid>
             </Grid>
 

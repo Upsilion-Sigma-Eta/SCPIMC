@@ -4,4 +4,6 @@ public enum ELogPanelKeys
 {
     ProgramLog = 0,
     CommunicationLog = 1,
+    MainSendMessageLog = 2,
+    MainReceivedMessageLog = 3,
 }

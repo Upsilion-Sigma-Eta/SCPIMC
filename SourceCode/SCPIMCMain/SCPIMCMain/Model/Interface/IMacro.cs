@@ -21,7 +21,7 @@ namespace SCPIMCMain.Model.Interface
         public void ClearCommands();
         public void ResetMacro();
         public void ValidateMacro();
-        public void UpdateMacro();
+        public void ReloadMacro();
         public void DeleteMacro();
     }
 }

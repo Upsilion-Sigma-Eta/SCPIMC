@@ -342,7 +342,7 @@ namespace SCPIMCMain.Model.Implementation
                     if (stream.CanRead)
                     {
                         byte[] buffer = new byte[1024];
-                        int readedCount = stream.Read(buffer, 0, 1024);
+                        int readedCount = await stream.ReadAsync(buffer, 0, 1024);
 
                         if (readedCount <= 0)
                         {

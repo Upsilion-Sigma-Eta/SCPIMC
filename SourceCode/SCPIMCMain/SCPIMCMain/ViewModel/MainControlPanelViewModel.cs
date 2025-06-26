@@ -20,23 +20,62 @@ namespace SCPIMCMain.ViewModel
         public MainControlPanelViewModel()
         {
             _deviceModel = new DeviceModel();
+            SendedMessageLogPanel = new LogPanelViewModel(ELogPanelKeys.MainSendMessageLog);
+            ReceivedMessageLogPanel = new LogPanelViewModel(ELogPanelKeys.MainReceivedMessageLog);
+
+            Singleton<ManagerService<int, DeviceModel>>.Instance.AddKeyWithValue(new KeyValuePair<int, DeviceModel>(0, _deviceModel));
+
             DeviceIPAddress = "0.0.0.0";
             DevicePortNum = "0";
             _tabItemModelCollection = new ObservableCollection<TabItemModel>();
 
             ManagerService<ELogPanelKeys, LogPanelViewModel> managerSerivce = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance;
 
+            managerSerivce.AddKeyWithValue(new KeyValuePair<ELogPanelKeys, LogPanelViewModel>(ELogPanelKeys.MainSendMessageLog, SendedMessageLogPanel));
+            managerSerivce.AddKeyWithValue(new KeyValuePair<ELogPanelKeys, LogPanelViewModel>(ELogPanelKeys.MainReceivedMessageLog, ReceivedMessageLogPanel));
+
             managerSerivce.AddKeyWithValue(new KeyValuePair<ELogPanelKeys, LogPanelViewModel>(ELogPanelKeys.ProgramLog, new LogPanelViewModel(ELogPanelKeys.ProgramLog)));
+            managerSerivce.AddKeyWithValue(new KeyValuePair<ELogPanelKeys, LogPanelViewModel>(ELogPanelKeys.CommunicationLog, new LogPanelViewModel(ELogPanelKeys.CommunicationLog)));
 
             TabItemModel logTab = new TabItemModel("Program Log", true, managerSerivce.TryGetValue(ELogPanelKeys.ProgramLog));
+            TabItemModel commLogTab = new TabItemModel("Comm Log", true, managerSerivce.TryGetValue(ELogPanelKeys.CommunicationLog));
 
             SelectedTabItemModel = logTab;
 
             TabItemModelCollection.Add(logTab);
+            TabItemModelCollection.Add(commLogTab);
 
             managerSerivce.TryGetValue(ELogPanelKeys.ProgramLog).Log("Program Intialized.");
 
             DeviceConnectCommand = new RelayCommand(new Action<object?>(async (object? parameter) => await ConnectDevice(parameter)), null);
+        }
+
+        private LogPanelViewModel _sendedMessageLogPanel;
+        public LogPanelViewModel SendedMessageLogPanel
+        {
+            get
+            {
+                return _sendedMessageLogPanel;
+            }
+            set
+            {
+                _sendedMessageLogPanel = value;
+                OnPropertyChangedEventHandler(this, nameof(SendedMessageLogPanel));
+            }
+        }
+
+        private LogPanelViewModel _receivedMessageLogPanel;
+        private LogPanelViewModel ReceivedMessageLogPanel
+        {
+            get
+            {
+                return _receivedMessageLogPanel;
+            }
+            set
+            {
+                _receivedMessageLogPanel = value;
+                OnPropertyChangedEventHandler(this, nameof(ReceivedMessageLogPanel));
+            }
         }
 
         // ===== Variable and Properties =====
