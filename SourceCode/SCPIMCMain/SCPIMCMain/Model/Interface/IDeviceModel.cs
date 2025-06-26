@@ -27,6 +27,6 @@ namespace SCPIMCMain.Model.Interface
         public Task<string> ReceiveCommandAsync(CancellationToken cts);
 
         public void SendCommand(string command, bool isQueryCommand);
-        public void ReceiveCommand(uint timeout);
+        public string ReceiveCommand(uint timeout);
     }
 }

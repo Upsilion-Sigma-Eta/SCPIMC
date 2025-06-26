@@ -159,6 +159,14 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
+            <TabControl Grid.Row="5" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,5,5,5">
+                <TabItem Header="TabItem">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+                <TabItem Header="TabItem">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+            </TabControl>
         </Grid>
         <!-- Styled Border for message logs -->
         <Border Style="{StaticResource ContentBorderStyle}"

@@ -19,6 +19,17 @@ namespace SCPIMCMain.Model.Implementation
         private EDeviceConnectionStatus _connectionStatus;
         private TcpClient _tcpClient;
 
+        public DeviceModel()
+        {
+            DeviceName = "Default";
+            DeviceType = "Default";
+            IPAddress = "0.0.0.0";
+            Port = 0;
+
+            _connectionStatus = EDeviceConnectionStatus.Disconnected;
+            TcpClient = new TcpClient();
+        }
+
         public TcpClient TcpClient
         {
             get
@@ -79,7 +90,7 @@ namespace SCPIMCMain.Model.Implementation
             get => _port;
             set
             {
-                if (value <= 0)
+                if (value < 0)
                 {
                     throw new ArgumentException("Port number cannot be below zero.");
                 }
@@ -294,7 +305,7 @@ namespace SCPIMCMain.Model.Implementation
                 {
                     if (stream.CanRead)
                     {
-                        byte[1024] buffer = new byte[1024];
+                        byte[] buffer = new byte[1024];
                         int readedCount = stream.Read(buffer, 0, 1024);
 
                         if (readedCount <= 0)
@@ -305,10 +316,15 @@ namespace SCPIMCMain.Model.Implementation
                         return ASCIIEncoding.ASCII.GetString(buffer, 0, readedCount);
                     }
                 }
+
+                return "";
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Can not receive anything from the host device. Reason: {ex.Message}");
+
+                return "";
             }
         }
 
@@ -325,7 +341,7 @@ namespace SCPIMCMain.Model.Implementation
                 {
                     if (stream.CanRead)
                     {
-                        byte[1024] buffer = new byte[1024];
+                        byte[] buffer = new byte[1024];
                         int readedCount = stream.Read(buffer, 0, 1024);
 
                         if (readedCount <= 0)
@@ -336,10 +352,14 @@ namespace SCPIMCMain.Model.Implementation
                         return ASCIIEncoding.ASCII.GetString(buffer, 0, readedCount);
                     }
                 }
+
+                return "";
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Can not receive anything from the host device. Reason: {ex.Message}");
+
+                return "";
             }
         }
 
