@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -7,6 +8,10 @@ using SCPIMCMain.Common.Enum;
 using SCPIMCMain.Common.Logic;
 using System.Collections.ObjectModel;
 using SCPIMCMain.Model.Logic;
+using SCPIMCMain.ViewModel.Controls;
+using SCPIMCMain.View.Controls;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SCPIMCMain.ViewModel
 {
@@ -17,10 +22,21 @@ namespace SCPIMCMain.ViewModel
             _deviceModel = new DeviceModel();
             DeviceIPAddress = "0.0.0.0";
             DevicePortNum = "0";
+            _tabItemModelCollection = new ObservableCollection<TabItemModel>();
 
-            TabItemModel logTab = new TabItemModel("Program Log", true);
+            ManagerService<ELogPanelKeys, LogPanelViewModel> managerSerivce = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance;
 
-            DeviceConnectCommand = new RelayCommand(new Action<object?>((object? parameter) => ConnectDevice(parameter)), null);
+            managerSerivce.AddKeyWithValue(new KeyValuePair<ELogPanelKeys, LogPanelViewModel>(ELogPanelKeys.ProgramLog, new LogPanelViewModel(ELogPanelKeys.ProgramLog)));
+
+            TabItemModel logTab = new TabItemModel("Program Log", true, managerSerivce.TryGetValue(ELogPanelKeys.ProgramLog));
+
+            SelectedTabItemModel = logTab;
+
+            TabItemModelCollection.Add(logTab);
+
+            managerSerivce.TryGetValue(ELogPanelKeys.ProgramLog).Log("Program Intialized.");
+
+            DeviceConnectCommand = new RelayCommand(new Action<object?>(async (object? parameter) => await ConnectDevice(parameter)), null);
         }
 
         // ===== Variable and Properties =====
@@ -116,7 +132,7 @@ namespace SCPIMCMain.ViewModel
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error connecting to device: {ex.Message}");
+                Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.TryGetValue(ELogPanelKeys.ProgramLog).Log($"Error connecting to device: {ex.Message}");
             }
         }
 

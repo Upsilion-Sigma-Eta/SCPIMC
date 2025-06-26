@@ -30,6 +30,13 @@ public class TabItemModel : NotifyPropertyChanged
         Content = content;
     }
 
+    public TabItemModel(string header, bool isEnabled, object content)
+    {
+        Header = header;
+        IsEnabled = isEnabled;
+        Content = content;
+    }
+
     public string Header
     {
         get => _header;

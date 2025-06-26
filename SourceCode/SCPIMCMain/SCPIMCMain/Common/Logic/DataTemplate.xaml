@@ -1,8 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:view="clr-namespace:SCPIMCMain.View"
-                    xmlns:viewModel="clr-namespace:SCPIMCMain.ViewModel">
+                    xmlns:viewControl="clr-namespace:SCPIMCMain.View.Controls"
+                    xmlns:viewModel="clr-namespace:SCPIMCMain.ViewModel"
+                    xmlns:viewModelControl="clr-namespace:SCPIMCMain.ViewModel.Controls">
     <DataTemplate DataType="{x:Type viewModel:MainControlPanelViewModel}">
         <view:MainControlPanelView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModelControl:LogPanelViewModel}">
+        <viewControl:LogPanelView/>
     </DataTemplate>
 </ResourceDictionary>
