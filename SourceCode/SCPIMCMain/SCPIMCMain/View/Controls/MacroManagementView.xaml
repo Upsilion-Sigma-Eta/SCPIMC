@@ -7,6 +7,32 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                   Text="Macro 관리"
+                   FontSize="16" FontWeight="Bold"
+                   Margin="10"/>
+
+        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}"
+                 Grid.Row="1" Grid.Column="0"
+                 Margin="10"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="1"
+                    Orientation="Vertical"
+                    Margin="10"
+                    VerticalAlignment="Top">
+            <Button Content="Add Macro"    Width="100" Margin="0,0,0,5"/>
+            <Button Content="Edit Macro"   Width="100" Margin="0,0,0,5"/>
+            <Button Content="Delete Macro" Width="100" Margin="0,0,0,5"/>
+            <Button Content="Update Macro" Width="100"/>
+        </StackPanel>
     </Grid>
 </UserControl>

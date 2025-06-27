@@ -289,7 +289,26 @@ namespace SCPIMCMain.Model.Implementation
 
         public string Load(string filePath)
         {
-            return string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    throw new ArgumentException("File path cannot be null or empty.");
+                }
+
+                if (!File.Exists(filePath))
+                {
+                    throw new FileNotFoundException($"File not found: {filePath}");
+                }
+
+                string jsonContent = File.ReadAllText(filePath);
+                return jsonContent;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading device model from file {filePath}. Reason: {ex.Message}");
+                return string.Empty;
+            }
         }
 
         public string ReceiveCommand(uint timeout)
@@ -365,7 +384,19 @@ namespace SCPIMCMain.Model.Implementation
 
         public void Save(string filePath, string jsonContent, bool isBinary = false)
         {
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    throw new ArgumentException("File path cannot be null or empty.");
+                }
 
+                File.WriteAllText(filePath, jsonContent);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving device model to file {filePath}. Reason: {ex.Message}");
+            }
         }
 
         public void SendCommand(string command, bool isQueryCommand)

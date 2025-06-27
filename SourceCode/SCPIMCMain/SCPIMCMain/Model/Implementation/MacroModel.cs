@@ -85,7 +85,22 @@ public class MacroModel : IMacro, ISaveable, ILoadable
 
     public string Load(string filePath)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrEmpty(filePath))
+        {
+            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+        }
+
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException($"File not found: {filePath}");
+        }
+
+        string jsonContent = File.ReadAllText(filePath);
+        // Deserialize the JSON content to populate the macro properties
+        // Assuming a JSON deserialization method is available
+        // Example: JsonConvert.DeserializeObject<MacroModel>(jsonContent);
+
+        return jsonContent; // Return the loaded content or the deserialized object
     }
 
     public void RemoveCommand(int index)
@@ -104,7 +119,18 @@ public class MacroModel : IMacro, ISaveable, ILoadable
 
     public void Save(string filePath, string jsonContent, bool isBinary = false)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrEmpty(filePath))
+        {
+            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+        }
+
+        string directory = Path.GetDirectoryName(filePath);
+        if (directory != null && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllText(filePath, jsonContent);
     }
 
     // 매크로를 다시 불러옴
@@ -120,6 +146,17 @@ public class MacroModel : IMacro, ISaveable, ILoadable
 
     public void ValidateMacro()
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrEmpty(_id))
+        {
+            throw new InvalidOperationException("Macro ID cannot be null or empty.");
+        }
+        if (string.IsNullOrEmpty(_name))
+        {
+            throw new InvalidOperationException("Macro name cannot be null or empty.");
+        }
+        if (_commandChain == null || _commandChain.Count == 0)
+        {
+            throw new InvalidOperationException("Macro must contain at least one command.");
+        }
     }
 }
