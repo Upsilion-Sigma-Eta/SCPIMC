@@ -33,15 +33,18 @@ namespace SCPIMCMain.ViewModel
 
             TabItemModel log_tab = new TabItemModel("Program Log", true, manager_serivce.Func_TryGetValue(ELogPanelKeys.ProgramLog));
             TabItemModel comm_log_tab = new TabItemModel("Comm Log", true, manager_serivce.Func_TryGetValue(ELogPanelKeys.CommunicationLog));
+            TabItemModel macro_tab = new TabItemModel("Macro", true,
+                new MacroManagementViewModel());
 
             SelectedTabItemModel = log_tab;
 
             TabItemModelCollection.Add(log_tab);
             TabItemModelCollection.Add(comm_log_tab);
+            TabItemModelCollection.Add(macro_tab);
 
             manager_serivce.Func_TryGetValue(ELogPanelKeys.ProgramLog).Func_Log("Program Intialized.");
 
-            DeviceConnectCommand = new RelayCommand(new Action<object?>(async (object? __parameter) => await Func_ConnectDevice(__parameter)), null);
+            DeviceConnectCommand = new RelayCommand(async void (__parameter) => await Func_ConnectDevice(__parameter), null);
         }
 
         private LogPanelViewModel _sended_message_log_panel;
@@ -59,7 +62,7 @@ namespace SCPIMCMain.ViewModel
         }
 
         private LogPanelViewModel _received_message_log_panel;
-        private LogPanelViewModel ReceivedMessageLogPanel
+        public LogPanelViewModel ReceivedMessageLogPanel
         {
             get
             {

@@ -10,4 +10,7 @@
     <DataTemplate DataType="{x:Type viewModelControl:LogPanelViewModel}">
         <viewControl:LogPanelView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModelControl:MacroManagementViewModel}">
+        <viewControl:MacroManagementView/>
+    </DataTemplate>
 </ResourceDictionary>
