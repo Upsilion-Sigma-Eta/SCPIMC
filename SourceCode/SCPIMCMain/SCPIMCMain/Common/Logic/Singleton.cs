@@ -1,7 +1,3 @@
-using System;
-using System.ComponentModel;
-using System.Windows;
-
 namespace SCPIMCMain.Common.Logic;
 
 public class Singleton<T> : Object where T : new()

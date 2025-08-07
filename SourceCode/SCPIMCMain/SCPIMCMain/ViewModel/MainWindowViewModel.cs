@@ -5,7 +5,7 @@ namespace SCPIMCMain.ViewModel
 {
     public class MainWindowViewModel : NotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler? EPropertyChanged;
 
         private object _content;
         public object ContentView

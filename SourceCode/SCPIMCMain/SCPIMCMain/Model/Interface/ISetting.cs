@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SCPIMCMain.Model.Interface
+﻿namespace SCPIMCMain.Model.Interface
 {
-    public interface ISetting<SettingValueType> : ILoadable, ISaveable
+    public interface ISetting<TSettingValueType> : ILoadable, ISaveable
     {
-        public SettingValueType Value { get; set; }
+        public TSettingValueType Value { get; set; }
 
         public string SettingName { get; set; }
         public string SettingValue { get; set; }
         public string Description { get; set; }
-        public void ResetSettings();
-        public void ValidateSettings();
-        public event EventHandler SettingsChanged;
+        public void Func_ResetSettings();
+        public void Func_ValidateSettings();
+        public event EventHandler ESettingsChanged;
     }
 }

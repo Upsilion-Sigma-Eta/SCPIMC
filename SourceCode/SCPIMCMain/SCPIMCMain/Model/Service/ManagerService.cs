@@ -1,30 +1,27 @@
-using System;
-using System.Windows;
-
 namespace SCPIMCMain.Model.Logic;
 
 public class ManagerService<TKey, TValue> : Object where TKey : notnull where TValue : class
 {
-    private Dictionary<TKey, TValue> _internalManagedItem = new Dictionary<TKey, TValue>();
+    private Dictionary<TKey, TValue> _internal_managed_item = new Dictionary<TKey, TValue>();
 
-    public IEnumerable<TKey> Keys()
+    public IEnumerable<TKey> Func_Keys()
     {
-        return _internalManagedItem.Keys.ToList();
+        return _internal_managed_item.Keys.ToList();
     }
 
-    public IEnumerable<TValue> Values()
+    public IEnumerable<TValue> Func_Values()
     {
-        return _internalManagedItem.Values.ToList();
+        return _internal_managed_item.Values.ToList();
     }
 
-    public TValue TryGetValue(TKey key)
+    public TValue Func_TryGetValue(TKey __key)
     {
         try
         {
-            TValue returnValue = default(TValue);
-            if (_internalManagedItem.TryGetValue(key, out returnValue))
+            TValue return_value = default(TValue);
+            if (_internal_managed_item.TryGetValue(__key, out return_value))
             {
-                return returnValue;
+                return return_value;
             }
             else
             {
@@ -37,21 +34,21 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
         }
     }
 
-    public IEnumerable<TKey> TryGetKey(TValue value)
+    public IEnumerable<TKey> Func_TryGetKey(TValue __value)
     {
         try
         {
-            List<TKey> foundKeyWithValues = new List<TKey>();
+            List<TKey> found_key_with_values = new List<TKey>();
 
-            foreach (TKey savedKey in _internalManagedItem.Keys)
+            foreach (TKey saved_key in _internal_managed_item.Keys)
             {
-                if (_internalManagedItem[savedKey] == value)
+                if (_internal_managed_item[saved_key] == __value)
                 {
-                    foundKeyWithValues.Add(savedKey);
+                    found_key_with_values.Add(saved_key);
                 }
             }
 
-            return foundKeyWithValues;
+            return found_key_with_values;
         }
         catch (Exception ex)
         {
@@ -61,11 +58,11 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
         }
     }
 
-    public bool AddKeyWithValue(KeyValuePair<TKey, TValue> pair)
+    public bool Func_AddKeyWithValue(KeyValuePair<TKey, TValue> __pair)
     {
         try
         {
-            return _internalManagedItem.TryAdd(pair.Key, pair.Value);
+            return _internal_managed_item.TryAdd(__pair.Key, __pair.Value);
         }
         catch (Exception ex)
         {
@@ -75,11 +72,11 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
         }
     }
 
-    public bool RemoveKeyWithValue(TKey key)
+    public bool Func_RemoveKeyWithValue(TKey __key)
     {
         try
         {
-            return _internalManagedItem.Remove(key);
+            return _internal_managed_item.Remove(__key);
         }
         catch (Exception ex)
         {

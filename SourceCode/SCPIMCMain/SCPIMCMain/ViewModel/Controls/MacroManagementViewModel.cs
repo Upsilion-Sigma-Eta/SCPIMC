@@ -1,7 +1,4 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq.Expressions;
 using System.Windows.Input;
 using SCPIMCMain.Common.Logic;
 using SCPIMCMain.Model.Implementation;
@@ -14,39 +11,39 @@ public class MacroManagementViewModel : NotifyPropertyChanged
     {
         // 저장된 매크로들을 불러오는 로직 작성
         MacroModels = new ObservableCollection<MacroModel>();
-        DeleteMacroCommand = new RelayCommand(DeleteMacro, null);
+        DeleteMacroCommand = new RelayCommand(Func_DeleteMacro, null);
 
     }
 
-    private ObservableCollection<MacroModel> _macroModels;
+    private ObservableCollection<MacroModel> _macro_models;
 
     public ObservableCollection<MacroModel> MacroModels
     {
         get
         {
-            return _macroModels;
+            return _macro_models;
         }
         set
         {
-            _macroModels = value;
+            _macro_models = value;
             OnPropertyChangedEventHandler(this, nameof(MacroModels));
         }
     }
 
-    private ICommand _addMacroCommand;
-    private ICommand _deleteMacroCommmand;
-    private ICommand _editMacroCommandl;
-    private ICommand _reloadMacroCommand;
+    private ICommand _add_macro_command;
+    private ICommand _delete_macro_commmand;
+    private ICommand _edit_macro_commandl;
+    private ICommand _reload_macro_command;
 
     public ICommand AddMacroCommand
     {
         get
         {
-            return _addMacroCommand;
+            return _add_macro_command;
         }
         set
         {
-            _addMacroCommand = value;
+            _add_macro_command = value;
             OnPropertyChangedEventHandler(this, nameof(AddMacroCommand));
         }
     }
@@ -55,11 +52,11 @@ public class MacroManagementViewModel : NotifyPropertyChanged
     {
         get
         {
-            return _deleteMacroCommmand;
+            return _delete_macro_commmand;
         }
         set
         {
-            _deleteMacroCommmand = value;
+            _delete_macro_commmand = value;
             OnPropertyChangedEventHandler(this, nameof(DeleteMacroCommand));
         }
     }
@@ -68,11 +65,11 @@ public class MacroManagementViewModel : NotifyPropertyChanged
     {
         get
         {
-            return _editMacroCommandl;
+            return _edit_macro_commandl;
         }
         set
         {
-            _editMacroCommandl = value;
+            _edit_macro_commandl = value;
             OnPropertyChangedEventHandler(this, nameof(EditMacroCommand));
         }
     }
@@ -81,25 +78,25 @@ public class MacroManagementViewModel : NotifyPropertyChanged
     {
         get
         {
-            return _reloadMacroCommand;
+            return _reload_macro_command;
         }
         set
         {
-            _reloadMacroCommand = value;
+            _reload_macro_command = value;
             OnPropertyChangedEventHandler(this, nameof(ReloadMacroCommand));
         }
     }
 
-    public void AddMacro(object? param)
+    public void Func_AddMacro(object? __param)
     {
         // Macro 설정 창 열기
     }
 
-    public void DeleteMacro(object? param)
+    public void Func_DeleteMacro(object? __param)
     {
         try
         {
-            if (param is int index)
+            if (__param is int index)
             {
                 if (index < 0 || index >= MacroModels.Count)
                 {
@@ -110,7 +107,7 @@ public class MacroManagementViewModel : NotifyPropertyChanged
             }
             else
             {
-                throw new ArgumentException($"Parameter must be of type int, but was {param.GetType()}");
+                throw new ArgumentException($"Parameter must be of type int, but was {__param.GetType()}");
             }
 
         }
@@ -120,27 +117,27 @@ public class MacroManagementViewModel : NotifyPropertyChanged
         }
     }
 
-    public void EditMacro(object? param)
+    public void Func_EditMacro(object? __param)
     {
         // Macro 설정 창 열기
     }
 
-    public void ReloadMacro(object? param)
+    public void Func_ReloadMacro(object? __param)
     {
         try
         {
-            if (param is int index)
+            if (__param is int index)
             {
                 if (index < 0 || index >= MacroModels.Count)
                 {
                     throw new ArgumentException($"Index {index} is out of range for MacroModels collection.");
                 }
 
-                MacroModels[index].ReloadMacro();
+                MacroModels[index].Func_ReloadMacro();
             }
             else
             {
-                throw new ArgumentException($"Parameter must be of type int, but was {param.GetType()}");
+                throw new ArgumentException($"Parameter must be of type int, but was {__param.GetType()}");
             }
         }
         catch (Exception ex)

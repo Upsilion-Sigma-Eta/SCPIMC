@@ -1,4 +1,3 @@
-using System;
 using SCPIMCMain.Common.Logic;
 
 namespace SCPIMCMain.Model.Logic;
@@ -6,7 +5,7 @@ namespace SCPIMCMain.Model.Logic;
 public class TabItemModel : NotifyPropertyChanged
 {
     private string _header;
-    private bool _isEnabled;
+    private bool _is_enabled;
     private object _content;
 
     public TabItemModel()
@@ -16,25 +15,25 @@ public class TabItemModel : NotifyPropertyChanged
         Content = null;
     }
 
-    public TabItemModel(string header, bool isEnabled)
+    public TabItemModel(string __header, bool __isEnabled)
     {
-        Header = header;
-        IsEnabled = isEnabled;
+        Header = __header;
+        IsEnabled = __isEnabled;
         Content = null;
     }
 
-    public TabItemModel(string header, object content)
+    public TabItemModel(string __header, object __content)
     {
-        Header = header;
+        Header = __header;
         IsEnabled = true;
-        Content = content;
+        Content = __content;
     }
 
-    public TabItemModel(string header, bool isEnabled, object content)
+    public TabItemModel(string __header, bool __isEnabled, object __content)
     {
-        Header = header;
-        IsEnabled = isEnabled;
-        Content = content;
+        Header = __header;
+        IsEnabled = __isEnabled;
+        Content = __content;
     }
 
     public string Header
@@ -52,12 +51,12 @@ public class TabItemModel : NotifyPropertyChanged
 
     public bool IsEnabled
     {
-        get => _isEnabled;
+        get => _is_enabled;
         set
         {
-            if (_isEnabled != value)
+            if (_is_enabled != value)
             {
-                _isEnabled = value;
+                _is_enabled = value;
                 OnPropertyChangedEventHandler(this, nameof(IsEnabled));
             }
         }

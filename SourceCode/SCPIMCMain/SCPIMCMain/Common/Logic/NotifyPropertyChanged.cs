@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace SCPIMCMain.Common.Logic
@@ -7,9 +6,9 @@ namespace SCPIMCMain.Common.Logic
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void OnPropertyChangedEventHandler(object sender, string? name)
+        protected void OnPropertyChangedEventHandler(object __sender, string? __name)
         {
-            PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(__sender, new PropertyChangedEventArgs(__name));
         }
     }
 }

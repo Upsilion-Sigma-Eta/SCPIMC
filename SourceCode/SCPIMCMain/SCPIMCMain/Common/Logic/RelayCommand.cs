@@ -1,4 +1,3 @@
-using System;
 using System.Windows.Input;
 
 namespace SCPIMCMain.Common.Logic
@@ -8,28 +7,28 @@ namespace SCPIMCMain.Common.Logic
         public event EventHandler? CanExecuteChanged;
 
         private Action<object?> _execute;
-        private Func<object?, bool> _canExecute;
+        private Func<object?, bool> _can_execute;
 
-        public RelayCommand(Action<object?> execute, Func<object?, bool> canExecute)
+        public RelayCommand(Action<object?> __execute, Func<object?, bool> __canExecute)
         {
-            _execute = execute;
-            _canExecute = canExecute;
+            _execute = __execute;
+            _can_execute = __canExecute;
         }
 
-        public bool CanExecute(object? parameter)
+        public bool CanExecute(object? __parameter)
         {
-            if (_canExecute == null)
+            if (_can_execute == null)
             {
                 return true;
             }
-            return _canExecute.Invoke(parameter);
+            return _can_execute.Invoke(__parameter);
         }
 
-        public void Execute(object? parameter)
+        public void Execute(object? __parameter)
         {
-            if (CanExecute(parameter))
+            if (CanExecute(__parameter))
             {
-                _execute.Invoke(parameter);
+                _execute.Invoke(__parameter);
             }
         }
     }

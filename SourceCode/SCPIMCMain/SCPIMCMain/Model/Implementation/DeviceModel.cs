@@ -1,10 +1,6 @@
-using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.Unicode;
-using System.Threading;
-using System.Threading.Tasks;
 using SCPIMCMain.Common.Enum;
 using SCPIMCMain.Model.Interface;
 
@@ -12,21 +8,21 @@ namespace SCPIMCMain.Model.Implementation
 {
     public class DeviceModel : IDeviceModel, ISaveable, ILoadable
     {
-        private string _deviceName;
-        private string _deviceType;
-        private string _ipAddress;
+        private string _device_name;
+        private string _device_type;
+        private string _ip_address;
         private int _port;
-        private EDeviceConnectionStatus _connectionStatus;
-        private TcpClient _tcpClient;
+        private EDeviceConnectionStatus _connection_status;
+        private TcpClient _tcp_client;
 
         public DeviceModel()
         {
             DeviceName = "Default";
             DeviceType = "Default";
-            IPAddress = "0.0.0.0";
+            IpAddress = "0.0.0.0";
             Port = 0;
 
-            _connectionStatus = EDeviceConnectionStatus.Disconnected;
+            _connection_status = EDeviceConnectionStatus.Disconnected;
             TcpClient = new TcpClient();
         }
 
@@ -34,55 +30,55 @@ namespace SCPIMCMain.Model.Implementation
         {
             get
             {
-                return _tcpClient;
+                return _tcp_client;
             }
             protected set
             {
-                if (_tcpClient != null && value == null)
+                if (_tcp_client != null && value == null)
                 {
                     throw new Exception("Client must be non-null after initialized.");
                 }
                 else
                 {
-                    _tcpClient = value;
+                    _tcp_client = value;
                 }
             }
         }
 
         public string DeviceName
         {
-            get => _deviceName;
+            get => _device_name;
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("Device name cannot be null or empty.");
                 }
-                _deviceName = value;
+                _device_name = value;
             }
         }
         public string DeviceType
         {
-            get => _deviceType;
+            get => _device_type;
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("Device Type cannot be null or empty.");
                 }
-                _deviceType = value;
+                _device_type = value;
             }
         }
-        public string IPAddress
+        public string IpAddress
         {
-            get => _ipAddress;
+            get => _ip_address;
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("IP Address cannot be null or empty.");
                 }
-                _ipAddress = value;
+                _ip_address = value;
             }
         }
         public int Port
@@ -101,90 +97,90 @@ namespace SCPIMCMain.Model.Implementation
         {
             get
             {
-                return _connectionStatus;
+                return _connection_status;
             }
             set
             {
-                _connectionStatus = value;
+                _connection_status = value;
             }
         }
 
-        public EDeviceConnectionStatus Connect(string ipAddress, int port)
+        public EDeviceConnectionStatus Func_Connect(string __ipAddress, int __port)
         {
             // Connect할 때 한 번만 IPAddress와 Port 값을 설정
             // 한 번 설정되고 나서는 변경할 수 없음.
-            if (IPAddress == null)
+            if (IpAddress == null)
             {
-                IPAddress = ipAddress;
+                IpAddress = __ipAddress;
             }
             if (Port == 0)
             {
-                Port = port;
+                Port = __port;
             }
 
-            return Connect();
+            return Func_Connect();
         }
 
-        public EDeviceConnectionStatus Connect()
+        public EDeviceConnectionStatus Func_Connect()
         {
             try
             {
-                if (_tcpClient == null)
+                if (_tcp_client == null)
                 {
-                    _tcpClient = new TcpClient(IPAddress, Port);
+                    _tcp_client = new TcpClient(IpAddress, Port);
 
-                    _connectionStatus = EDeviceConnectionStatus.Disconnected;
+                    _connection_status = EDeviceConnectionStatus.Disconnected;
 
-                    if (_tcpClient != null)
+                    if (_tcp_client != null)
                     {
-                        _connectionStatus = EDeviceConnectionStatus.Connecting;
+                        _connection_status = EDeviceConnectionStatus.Connecting;
 
-                        _tcpClient.Connect(IPAddress, Port);
+                        _tcp_client.Connect(IpAddress, Port);
 
-                        if (_tcpClient.Connected)
+                        if (_tcp_client.Connected)
                         {
-                            _connectionStatus = EDeviceConnectionStatus.Connected;
+                            _connection_status = EDeviceConnectionStatus.Connected;
 
-                            return _connectionStatus;
+                            return _connection_status;
                         }
                         else
                         {
-                            _connectionStatus = EDeviceConnectionStatus.Disconnected;
+                            _connection_status = EDeviceConnectionStatus.Disconnected;
 
-                            return _connectionStatus;
+                            return _connection_status;
                         }
                     }
                 }
 
-                return _connectionStatus;
+                return _connection_status;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Can not connect to host device. Reason: {ex.Message}");
 
-                if (_connectionStatus == EDeviceConnectionStatus.Connecting)
+                if (_connection_status == EDeviceConnectionStatus.Connecting)
                 {
-                    Disconnect();
+                    Func_Disconnect();
                 }
 
-                return _connectionStatus;
+                return _connection_status;
             }
         }
 
-        public async Task<EDeviceConnectionStatus> ConnectAsync(string ipAddress, int port, CancellationToken cts)
+        public async Task<EDeviceConnectionStatus> Func_ConnectAsync(string __ipAddress, int __port, CancellationToken __cts)
         {
             try
             {
-                if (IPAddress == null)
+                if (IpAddress == null)
                 {
-                    _ipAddress = ipAddress;
+                    _ip_address = __ipAddress;
                 }
                 if (Port == 0)
                 {
-                    _port = port;
+                    _port = __port;
                 }
 
-                EDeviceConnectionStatus result = await ConnectAsync(cts);
+                EDeviceConnectionStatus result = await Func_ConnectAsync(__cts);
 
                 return result;
             }
@@ -192,147 +188,147 @@ namespace SCPIMCMain.Model.Implementation
             {
                 Console.WriteLine($"Can not connect to host device. Reason: {ex.Message}");
 
-                if (_connectionStatus == EDeviceConnectionStatus.Connecting)
+                if (_connection_status == EDeviceConnectionStatus.Connecting)
                 {
-                    await DisconnectAsync(cts);
+                    await Func_DisconnectAsync(__cts);
                 }
 
-                return _connectionStatus;
+                return _connection_status;
             }
         }
 
-        public async Task<EDeviceConnectionStatus> ConnectAsync(CancellationToken cts)
+        public async Task<EDeviceConnectionStatus> Func_ConnectAsync(CancellationToken __cts)
         {
             try
             {
-                if (_tcpClient == null)
+                if (_tcp_client == null)
                 {
-                    _tcpClient = new TcpClient(IPAddress, Port);
+                    _tcp_client = new TcpClient(IpAddress, Port);
 
-                    _connectionStatus = EDeviceConnectionStatus.Disconnected;
+                    _connection_status = EDeviceConnectionStatus.Disconnected;
 
-                    if (_tcpClient != null)
+                    if (_tcp_client != null)
                     {
-                        _connectionStatus = EDeviceConnectionStatus.Connecting;
+                        _connection_status = EDeviceConnectionStatus.Connecting;
 
-                        await _tcpClient.ConnectAsync(IPAddress, Port);
+                        await _tcp_client.ConnectAsync(IpAddress, Port);
 
-                        if (_tcpClient.Connected)
+                        if (_tcp_client.Connected)
                         {
-                            _connectionStatus = EDeviceConnectionStatus.Connected;
+                            _connection_status = EDeviceConnectionStatus.Connected;
 
-                            return _connectionStatus;
+                            return _connection_status;
                         }
                         else
                         {
-                            _connectionStatus = EDeviceConnectionStatus.Disconnected;
+                            _connection_status = EDeviceConnectionStatus.Disconnected;
 
-                            return _connectionStatus;
+                            return _connection_status;
                         }
                     }
                 }
 
-                return _connectionStatus;
+                return _connection_status;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Can not connect to host device. Reason: {ex.Message}");
 
-                if (_connectionStatus == EDeviceConnectionStatus.Connecting)
+                if (_connection_status == EDeviceConnectionStatus.Connecting)
                 {
-                    await DisconnectAsync(cts);
+                    await Func_DisconnectAsync(__cts);
                 }
 
-                return _connectionStatus;
+                return _connection_status;
             }
         }
 
-        public EDeviceConnectionStatus Disconnect()
+        public EDeviceConnectionStatus Func_Disconnect()
         {
             try
             {
-                if (_tcpClient == null)
+                if (_tcp_client == null)
                 {
                     throw new Exception($"No connection to the host");
                 }
 
-                _connectionStatus = EDeviceConnectionStatus.Disconnecting;
+                _connection_status = EDeviceConnectionStatus.Disconnecting;
 
-                _tcpClient.Dispose();
-                _tcpClient = null;
+                _tcp_client.Dispose();
+                _tcp_client = null;
 
-                _connectionStatus = EDeviceConnectionStatus.Disconnected;
+                _connection_status = EDeviceConnectionStatus.Disconnected;
 
-                return _connectionStatus;
+                return _connection_status;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Can not disconnect from host device. Reason: {ex.Message}");
 
-                return _connectionStatus;
+                return _connection_status;
             }
         }
 
-        public async Task<EDeviceConnectionStatus> DisconnectAsync(CancellationToken cts)
+        public async Task<EDeviceConnectionStatus> Func_DisconnectAsync(CancellationToken __cts)
         {
             try
             {
-                return Disconnect();
+                return Func_Disconnect();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Can not disconnect from host device. Reason: {ex.Message}");
 
-                return _connectionStatus;
+                return _connection_status;
             }
         }
 
-        public string Load(string filePath)
+        public string Func_Load(string __filePath)
         {
             try
             {
-                if (string.IsNullOrEmpty(filePath))
+                if (string.IsNullOrEmpty(__filePath))
                 {
                     throw new ArgumentException("File path cannot be null or empty.");
                 }
 
-                if (!File.Exists(filePath))
+                if (!File.Exists(__filePath))
                 {
-                    throw new FileNotFoundException($"File not found: {filePath}");
+                    throw new FileNotFoundException($"File not found: {__filePath}");
                 }
 
-                string jsonContent = File.ReadAllText(filePath);
-                return jsonContent;
+                string json_content = File.ReadAllText(__filePath);
+                return json_content;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading device model from file {filePath}. Reason: {ex.Message}");
+                Console.WriteLine($"Error loading device model from file {__filePath}. Reason: {ex.Message}");
                 return string.Empty;
             }
         }
 
-        public string ReceiveCommand(uint timeout)
+        public string Func_ReceiveCommand(uint __timeout)
         {
             try
             {
-                if (_tcpClient == null || !_tcpClient.Connected)
+                if (_tcp_client == null || !_tcp_client.Connected)
                 {
                     throw new Exception($"No connection made to host.");
                 }
 
-                if (_tcpClient.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is NetworkStream stream)
                 {
                     if (stream.CanRead)
                     {
                         byte[] buffer = new byte[1024];
-                        int readedCount = stream.Read(buffer, 0, 1024);
+                        int readed_count = stream.Read(buffer, 0, 1024);
 
-                        if (readedCount <= 0)
+                        if (readed_count <= 0)
                         {
                             throw new Exception($"There is nothing to read.");
                         }
 
-                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readedCount);
+                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readed_count);
                     }
                 }
 
@@ -347,28 +343,28 @@ namespace SCPIMCMain.Model.Implementation
             }
         }
 
-        public async Task<string> ReceiveCommandAsync(CancellationToken cts)
+        public async Task<string> Func_ReceiveCommandAsync(CancellationToken __cts)
         {
             try
             {
-                if (_tcpClient == null || !_tcpClient.Connected)
+                if (_tcp_client == null || !_tcp_client.Connected)
                 {
                     throw new Exception($"No connection made to host.");
                 }
 
-                if (_tcpClient.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is NetworkStream stream)
                 {
                     if (stream.CanRead)
                     {
                         byte[] buffer = new byte[1024];
-                        int readedCount = await stream.ReadAsync(buffer, 0, 1024);
+                        int readed_count = await stream.ReadAsync(buffer, 0, 1024);
 
-                        if (readedCount <= 0)
+                        if (readed_count <= 0)
                         {
                             throw new Exception($"There is nothing to read.");
                         }
 
-                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readedCount);
+                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readed_count);
                     }
                 }
 
@@ -382,62 +378,62 @@ namespace SCPIMCMain.Model.Implementation
             }
         }
 
-        public void Save(string filePath, string jsonContent, bool isBinary = false)
+        public void Func_Save(string __filePath, string __jsonContent, bool __isBinary = false)
         {
             try
             {
-                if (string.IsNullOrEmpty(filePath))
+                if (string.IsNullOrEmpty(__filePath))
                 {
                     throw new ArgumentException("File path cannot be null or empty.");
                 }
 
-                File.WriteAllText(filePath, jsonContent);
+                File.WriteAllText(__filePath, __jsonContent);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving device model to file {filePath}. Reason: {ex.Message}");
+                Console.WriteLine($"Error saving device model to file {__filePath}. Reason: {ex.Message}");
             }
         }
 
-        public void SendCommand(string command, bool isQueryCommand)
+        public void Func_SendCommand(string __command, bool __isQueryCommand)
         {
             try
             {
-                if (_tcpClient == null || _tcpClient.Connected == false)
+                if (_tcp_client == null || _tcp_client.Connected == false)
                 {
                     throw new Exception($"Not connected to host.");
                 }
 
-                if (_tcpClient.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is NetworkStream stream)
                 {
-                    stream.Write(UTF8Encoding.ASCII.GetBytes(command));
+                    stream.Write(UTF8Encoding.ASCII.GetBytes(__command));
                     stream.Flush();
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Can't send a command {command} Reason: {ex.Message}");
+                Console.WriteLine($"Can't send a command {__command} Reason: {ex.Message}");
             }
         }
 
-        public async Task SendCommandAsync(string command, bool isQueryCommand, CancellationToken cts)
+        public async Task Func_SendCommandAsync(string __command, bool __isQueryCommand, CancellationToken __cts)
         {
             try
             {
-                if (_tcpClient == null || _tcpClient.Connected == false)
+                if (_tcp_client == null || _tcp_client.Connected == false)
                 {
                     throw new Exception($"Not connected to host.");
                 }
 
-                if (_tcpClient.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is NetworkStream stream)
                 {
-                    stream.WriteAsync(UTF8Encoding.ASCII.GetBytes(command));
+                    stream.WriteAsync(UTF8Encoding.ASCII.GetBytes(__command));
                     stream.FlushAsync();
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Can't send a command {command} Reason: {ex.Message}");
+                Console.WriteLine($"Can't send a command {__command} Reason: {ex.Message}");
             }
         }
     }

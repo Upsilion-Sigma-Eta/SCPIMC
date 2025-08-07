@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using SCPIMCMain.Common.Enum;
 using SCPIMCMain.Common.Logic;
@@ -8,7 +7,7 @@ namespace SCPIMCMain.ViewModel.Controls
     public class LogPanelViewModel : NotifyPropertyChanged
     {
         private ObservableCollection<string> _logs;
-        private ELogPanelKeys _logPanelKey;
+        private ELogPanelKeys _log_panel_key;
 
         public ObservableCollection<string> Logs
         {
@@ -21,21 +20,21 @@ namespace SCPIMCMain.ViewModel.Controls
         public LogPanelViewModel()
         {
             _logs = new ObservableCollection<string>();
-            _logPanelKey = ELogPanelKeys.ProgramLog;
+            _log_panel_key = ELogPanelKeys.ProgramLog;
         }
 
-        public LogPanelViewModel(ELogPanelKeys key)
+        public LogPanelViewModel(ELogPanelKeys __key)
         {
             _logs = new ObservableCollection<string>();
-            _logPanelKey = key;
+            _log_panel_key = __key;
         }
 
-        public void Log(string log)
+        public void Func_Log(string __log)
         {
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff");
-            string actualLog = $"[{timestamp}] | {log}";
+            string actual_log = $"[{timestamp}] | {__log}";
 
-            Logs.Add(actualLog);
+            Logs.Add(actual_log);
 
             if (Logs.Count > 300)
             {

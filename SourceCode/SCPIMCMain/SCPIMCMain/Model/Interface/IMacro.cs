@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SCPIMCMain.Common.Enum;
+﻿using SCPIMCMain.Common.Enum;
 
 namespace SCPIMCMain.Model.Interface
 {
@@ -15,13 +10,13 @@ namespace SCPIMCMain.Model.Interface
         public int HotkeyKeyCode { get; set; }
         public List<(ECommandType, string)> CommandChain { get; set; }
 
-        public void ExecuteMacro();
-        public void AddCommand(ECommandType commandType, string command);
-        public void RemoveCommand(int index);
-        public void ClearCommands();
-        public void ResetMacro();
-        public void ValidateMacro();
-        public void ReloadMacro();
-        public void DeleteMacro();
+        public void Func_ExecuteMacro();
+        public void Func_AddCommand(ECommandType __commandType, string __command);
+        public void Func_RemoveCommand(int __index);
+        public void Func_ClearCommands();
+        public void Func_ResetMacro();
+        public void Func_ValidateMacro();
+        public void Func_ReloadMacro();
+        public void Func_DeleteMacro();
     }
 }

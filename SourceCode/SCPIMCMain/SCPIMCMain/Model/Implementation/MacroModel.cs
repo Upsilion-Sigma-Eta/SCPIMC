@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using SCPIMCMain.Common.Enum;
 using SCPIMCMain.Common.Logic;
@@ -14,26 +12,26 @@ public class MacroModel : IMacro, ISaveable, ILoadable
     private string _id;
     private string _name;
     private string _description;
-    private int _hotkeyKeyCode;
-    private List<(ECommandType, string)> _commandChain;
+    private int _hotkey_key_code;
+    private List<(ECommandType, string)> _command_chain;
 
     public string Id { get => _id; set => _id = value; }
     public string Name { get => _name; set => _name = value; }
     public string Description { get => _description; set => _description = value; }
-    public int HotkeyKeyCode { get => _hotkeyKeyCode; set => _hotkeyKeyCode = value; }
-    public List<(ECommandType, string)> CommandChain { get => _commandChain; set => _commandChain = value; }
+    public int HotkeyKeyCode { get => _hotkey_key_code; set => _hotkey_key_code = value; }
+    public List<(ECommandType, string)> CommandChain { get => _command_chain; set => _command_chain = value; }
 
-    public void AddCommand(ECommandType commandType, string command)
+    public void Func_AddCommand(ECommandType __commandType, string __command)
     {
-        _commandChain.Add((commandType, command));
+        _command_chain.Add((__commandType, __command));
     }
 
-    public void ClearCommands()
+    public void Func_ClearCommands()
     {
-        _commandChain.Clear();
+        _command_chain.Clear();
     }
 
-    public void DeleteMacro()
+    public void Func_DeleteMacro()
     {
         string path = Path.Combine(".", "/Macro", $"/{_id}|{_name}");
         if (File.Exists(path))
@@ -41,23 +39,23 @@ public class MacroModel : IMacro, ISaveable, ILoadable
             File.Delete(path);
         }
 
-        ResetMacro();
-        _commandChain = null;
+        Func_ResetMacro();
+        _command_chain = null;
     }
 
-    public async void ExecuteMacro()
+    public async void Func_ExecuteMacro()
     {
-        DeviceModel _currentConnectedDevice = Singleton<ManagerService<int, DeviceModel>>.Instance.TryGetValue(int.Parse(_id));
+        DeviceModel current_connected_device = Singleton<ManagerService<int, DeviceModel>>.Instance.Func_TryGetValue(int.Parse(_id));
 
-        LogPanelViewModel commLog = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.TryGetValue(ELogPanelKeys.CommunicationLog);
-        LogPanelViewModel mainReceiveMessageLog = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.TryGetValue(ELogPanelKeys.MainReceivedMessageLog);
-        LogPanelViewModel programLog = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.TryGetValue(ELogPanelKeys.ProgramLog);
+        LogPanelViewModel comm_log = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.CommunicationLog);
+        LogPanelViewModel main_receive_message_log = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.MainReceivedMessageLog);
+        LogPanelViewModel program_log = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.ProgramLog);
 
-        programLog.Log($"Macro {Name} Started.");
+        program_log.Func_Log($"Macro {Name} Started.");
 
         using (CancellationTokenSource cts = new CancellationTokenSource())
         {
-            foreach ((ECommandType, string) command in _commandChain)
+            foreach ((ECommandType, string) command in _command_chain)
             {
                 switch (command.Item1)
                 {
@@ -65,14 +63,14 @@ public class MacroModel : IMacro, ISaveable, ILoadable
                         await Task.Delay(int.Parse(command.Item2));
                         break;
                     case ECommandType.Query:
-                        await _currentConnectedDevice.SendCommandAsync(command.Item2, true, cts.Token);
-                        string response = _currentConnectedDevice.ReceiveCommand(1000);
+                        await current_connected_device.Func_SendCommandAsync(command.Item2, true, cts.Token);
+                        string response = current_connected_device.Func_ReceiveCommand(1000);
 
-                        commLog.Log(response);
-                        mainReceiveMessageLog.Log(response);
+                        comm_log.Func_Log(response);
+                        main_receive_message_log.Func_Log(response);
                         break;
                     case ECommandType.Setter:
-                        await _currentConnectedDevice.SendCommandAsync(command.Item2, false, cts.Token);
+                        await current_connected_device.Func_SendCommandAsync(command.Item2, false, cts.Token);
                         break;
                     default:
                         throw new NotImplementedException($"Command type {command.Item1} is not implemented.");
@@ -80,71 +78,71 @@ public class MacroModel : IMacro, ISaveable, ILoadable
             }
         }
 
-        programLog.Log($"Macro {Name} End.");
+        program_log.Func_Log($"Macro {Name} End.");
     }
 
-    public string Load(string filePath)
+    public string Func_Load(string __filePath)
     {
-        if (string.IsNullOrEmpty(filePath))
+        if (string.IsNullOrEmpty(__filePath))
         {
-            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+            throw new ArgumentException("File path cannot be null or empty.", nameof(__filePath));
         }
 
-        if (!File.Exists(filePath))
+        if (!File.Exists(__filePath))
         {
-            throw new FileNotFoundException($"File not found: {filePath}");
+            throw new FileNotFoundException($"File not found: {__filePath}");
         }
 
-        string jsonContent = File.ReadAllText(filePath);
+        string json_content = File.ReadAllText(__filePath);
         // Deserialize the JSON content to populate the macro properties
         // Assuming a JSON deserialization method is available
         // Example: JsonConvert.DeserializeObject<MacroModel>(jsonContent);
 
-        return jsonContent; // Return the loaded content or the deserialized object
+        return json_content; // Return the loaded content or the deserialized object
     }
 
-    public void RemoveCommand(int index)
+    public void Func_RemoveCommand(int __index)
     {
-        _commandChain.RemoveAt(index);
+        _command_chain.RemoveAt(__index);
     }
 
-    public void ResetMacro()
+    public void Func_ResetMacro()
     {
         _id = null;
-        _commandChain.Clear();
+        _command_chain.Clear();
         _name = null;
         _description = null;
-        _hotkeyKeyCode = 0;
+        _hotkey_key_code = 0;
     }
 
-    public void Save(string filePath, string jsonContent, bool isBinary = false)
+    public void Func_Save(string __filePath, string __jsonContent, bool __isBinary = false)
     {
-        if (string.IsNullOrEmpty(filePath))
+        if (string.IsNullOrEmpty(__filePath))
         {
-            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+            throw new ArgumentException("File path cannot be null or empty.", nameof(__filePath));
         }
 
-        string directory = Path.GetDirectoryName(filePath);
+        string directory = Path.GetDirectoryName(__filePath);
         if (directory != null && !Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
         }
 
-        File.WriteAllText(filePath, jsonContent);
+        File.WriteAllText(__filePath, __jsonContent);
     }
 
     // 매크로를 다시 불러옴
-    public void ReloadMacro()
+    public void Func_ReloadMacro()
     {
         // 다시 불러오기 로직
         string path = Path.Combine(".", "/Macro", $"/{_id}|{_name}");
         if (File.Exists(path))
         {
-            Load(path);
+            Func_Load(path);
         }
     }
 
-    public void ValidateMacro()
+    public void Func_ValidateMacro()
     {
         if (string.IsNullOrEmpty(_id))
         {
@@ -154,7 +152,7 @@ public class MacroModel : IMacro, ISaveable, ILoadable
         {
             throw new InvalidOperationException("Macro name cannot be null or empty.");
         }
-        if (_commandChain == null || _commandChain.Count == 0)
+        if (_command_chain == null || _command_chain.Count == 0)
         {
             throw new InvalidOperationException("Macro must contain at least one command.");
         }

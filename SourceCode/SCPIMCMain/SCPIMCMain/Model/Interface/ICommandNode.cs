@@ -8,7 +8,7 @@ namespace SCPIMCMain.Model.Interface
 
         public string Prefix { get; set; }
         public string Postfix { get; set; }
-        public string GetWholeCommand();
-        public string GetNodeCommand();
+        public string Func_GetWholeCommand();
+        public string Func_GetNodeCommand();
     }
 }

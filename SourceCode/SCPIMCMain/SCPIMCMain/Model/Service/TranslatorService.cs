@@ -1,15 +1,13 @@
-using System;
-using System.CodeDom;
 using SCPIMCMain.Common.Enum;
 
 namespace SCPIMCMain.Model.Logic;
 
 public static class TranslatorService
 {
-    public static string Translate(this string text, ELanguageType language)
+    public static string Func_Translate(this string __text, ELanguageType __language)
     {
         // 변환 로직 작성
 
-        return text; // 임시 반환
+        return __text; // 임시 반환
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SCPIMCMain.Common.Enum;
+﻿using SCPIMCMain.Common.Enum;
 
 namespace SCPIMCMain.Model.Interface
 {
@@ -11,22 +6,22 @@ namespace SCPIMCMain.Model.Interface
     {
         public string DeviceName { get; set; }
         public string DeviceType { get; set; }
-        public string IPAddress { get; set; }
+        public string IpAddress { get; set; }
         public int Port { get; set; }
 
         public EDeviceConnectionStatus ConnectionStatus { get; set; }
-        public EDeviceConnectionStatus Connect(string ipAddress, int port);
-        public EDeviceConnectionStatus Connect();
-        public EDeviceConnectionStatus Disconnect();
+        public EDeviceConnectionStatus Func_Connect(string __ipAddress, int __port);
+        public EDeviceConnectionStatus Func_Connect();
+        public EDeviceConnectionStatus Func_Disconnect();
 
-        public Task<EDeviceConnectionStatus> ConnectAsync(string ipAddress, int port, CancellationToken cts);
-        public Task<EDeviceConnectionStatus> ConnectAsync(CancellationToken cts);
-        public Task<EDeviceConnectionStatus> DisconnectAsync(CancellationToken cts);
+        public Task<EDeviceConnectionStatus> Func_ConnectAsync(string __ipAddress, int __port, CancellationToken __cts);
+        public Task<EDeviceConnectionStatus> Func_ConnectAsync(CancellationToken __cts);
+        public Task<EDeviceConnectionStatus> Func_DisconnectAsync(CancellationToken __cts);
 
-        public Task SendCommandAsync(string command, bool isQueryCommand, CancellationToken cts);
-        public Task<string> ReceiveCommandAsync(CancellationToken cts);
+        public Task Func_SendCommandAsync(string __command, bool __isQueryCommand, CancellationToken __cts);
+        public Task<string> Func_ReceiveCommandAsync(CancellationToken __cts);
 
-        public void SendCommand(string command, bool isQueryCommand);
-        public string ReceiveCommand(uint timeout);
+        public void Func_SendCommand(string __command, bool __isQueryCommand);
+        public string Func_ReceiveCommand(uint __timeout);
     }
 }
