@@ -22,18 +22,52 @@
                    FontSize="16" FontWeight="Bold"
                    Margin="10"/>
 
-        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}"
+        <ListBox ItemsSource="{Binding MacroModels}"
+                 SelectedItem="{Binding SelectedMacro}"
                  Grid.Row="1" Grid.Column="0"
-                 Margin="10"/>
+                 Margin="10"
+                 x:Name="MacroListBox">
+            <ListBox.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick"
+                              Command="{Binding ExecuteMacroCommand}"
+                              CommandParameter="{Binding ElementName=MacroListBox, Path=SelectedIndex}"/>
+            </ListBox.InputBindings>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="5">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="{Binding Description}"
+                                   TextWrapping="Wrap"
+                                   Foreground="Gray"
+                                   Margin="0,3,0,0"/>
+                        <TextBlock Foreground="DarkGray" FontSize="11" Margin="0,3,0,0">
+                            <Run Text="Commands: "/>
+                            <Run Text="{Binding CommandChain.Count, Mode=OneWay}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <StackPanel Grid.Row="1" Grid.Column="1"
                     Orientation="Vertical"
                     Margin="10"
                     VerticalAlignment="Top">
-            <Button Content="Add Macro"    Width="100" Margin="0,0,0,5"/>
-            <Button Content="Edit Macro"   Width="100" Margin="0,0,0,5"/>
-            <Button Content="Delete Macro" Width="100" Margin="0,0,0,5"/>
-            <Button Content="Update Macro" Width="100"/>
+            <Button Content="Add Macro"
+                    Command="{Binding AddMacroCommand}"
+                    Width="100" Margin="0,0,0,5"/>
+            <Button Content="Edit Macro"
+                    Command="{Binding EditMacroCommand}"
+                    Width="100" Margin="0,0,0,5"/>
+            <Button Content="Delete Macro"
+                    Command="{Binding DeleteMacroCommand}"
+                    Width="100" Margin="0,0,0,5"/>
+            <Button Content="Reload Macro"
+                    Command="{Binding ReloadMacroCommand}"
+                    Width="100" Margin="0,0,0,5"/>
+            <Button Content="Execute Macro"
+                    Command="{Binding ExecuteMacroCommand}"
+                    Width="100"/>
         </StackPanel>
     </Grid>
 </UserControl>
