@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 using SCPIMCMain.Common.Enum;
 using SCPIMCMain.Common.Logic;
 using SCPIMCMain.Model.Interface;
-using SCPIMCMain.Model.Logic;
+using SCPIMCMain.Model.Service;
 using SCPIMCMain.ViewModel.Controls;
 
 namespace SCPIMCMain.Model.Implementation;
 
-public class MacroModel : IMacro, ISaveable, ILoadable
+public class MacroModel : IMacro
 {
     private string _id;
     private string _name;
@@ -63,6 +63,7 @@ public class MacroModel : IMacro, ISaveable, ILoadable
             LogPanelViewModel comm_log = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.CommunicationLog);
             LogPanelViewModel main_receive_message_log = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.MainReceivedMessageLog);
             LogPanelViewModel program_log = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.ProgramLog);
+            LogPanelViewModel sended_message_log = Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.MainSendMessageLog);
 
             program_log.Func_Log($"Macro '{Name}' Started.");
 
@@ -80,8 +81,11 @@ public class MacroModel : IMacro, ISaveable, ILoadable
 
                         case ECommandType.Query:
                             program_log.Func_Log($"Sending Query: {command.Item2}");
-                            await current_connected_device.Func_SendCommandAsync(command.Item2, true, cts.Token);
-                            string response = current_connected_device.Func_ReceiveCommand(1000);
+                            await current_connected_device.Func_SendCommandAsync($"{command.Item2}\r\n", true, cts.Token);
+                            
+                            sended_message_log.Func_Log(command.Item2);
+                            
+                            string response = await current_connected_device.Func_ReceiveCommandAsync(cts.Token);
 
                             comm_log.Func_Log($"Query Response: {response}");
                             main_receive_message_log.Func_Log(response);
@@ -89,7 +93,10 @@ public class MacroModel : IMacro, ISaveable, ILoadable
 
                         case ECommandType.Setter:
                             program_log.Func_Log($"Sending Setter: {command.Item2}");
-                            await current_connected_device.Func_SendCommandAsync(command.Item2, false, cts.Token);
+                            await current_connected_device.Func_SendCommandAsync($"{command.Item2}\r\n", false, cts.Token);
+                            
+                            sended_message_log.Func_Log(command.Item2);
+                            
                             break;
 
                         default:

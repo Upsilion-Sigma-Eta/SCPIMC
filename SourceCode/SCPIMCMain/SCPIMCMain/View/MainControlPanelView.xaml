@@ -11,9 +11,9 @@
     <Grid>
         <!-- 1. 3 열 구조 추가 -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="320"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
 
         <!-- 2. 좌측 설정 패널 -->
@@ -49,8 +49,9 @@
                        Margin="0,8,10,0" Height="16"/>
             <Grid Grid.Row="0" Grid.Column="1">
                 <TextBox x:Name="IpTextBox"
-                         Margin="5,5,5,5"/>
-                <TextBlock Text="Enter device IP"
+                         Margin="5,5,5,5"
+                         Text="{Binding DeviceIpAddress}"/>
+                <TextBlock Text="0.0.0.0"
                            Foreground="LightGray"
                            FontStyle="Italic"
                            Margin="5,5,5,5"
@@ -75,8 +76,9 @@
                        Margin="0,8,10,0" Height="16"/>
             <Grid Grid.Row="1" Grid.Column="1">
                 <TextBox x:Name="PortTextBox"
-                         Margin="5,5,5,5"/>
-                <TextBlock Text="Enter port"
+                         Margin="5,5,5,5"
+                         Text="{Binding DevicePortNum}"/>
+                <TextBlock Text="0"
                            Foreground="LightGray"
                            FontStyle="Italic"
                            Margin="5,5,5,5"
@@ -97,10 +99,11 @@
             <!-- Connect Button -->
             <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                     Content="Connect"
-                    Margin="5,5,5,5" Grid.RowSpan="1" Height="23"/>
+                    Margin="5,5,5,5" Height="23"
+                    Command="{Binding DeviceConnectCommand}"/>
 
             <!-- Send Command Row -->
-            <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="0,0,0,5">
+            <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -111,8 +114,9 @@
                     <TextBox x:Name="SendCommandTextBox"
                              TextWrapping="Wrap"
                              VerticalAlignment="Center"
-                             Margin="5,0,5,0"/>
-                    <TextBlock Text="Type command here"
+                             Margin="5,0,5,0"
+                             Text="{Binding EnteredScpiCommand}"/>
+                    <TextBlock Text="Enter the Command"
                                Foreground="LightGray"
                                FontStyle="Italic"
                                Margin="8,6,0,0"
@@ -135,16 +139,18 @@
                         Grid.Column="1"
                         Content="Send"
                         Padding="15,3"
-                        Margin="0,0,5,0"/>
+                        Margin="0,0,5,0"
+                        Command="{Binding DeviceSendScpiCommand}"/>
             </Grid>
 
             <!-- Received Command TextBox with placeholder hint -->
-            <Grid Grid.Row="4" Grid.ColumnSpan="2" Margin="5,5,5,5">
+            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5,5">
                 <TextBox x:Name="ReceivedCommandTextBox"
                          TextWrapping="Wrap"
                          AcceptsReturn="True"
-                         VerticalScrollBarVisibility="Auto"/>
-                <TextBlock Text="Received Response Displayed Here"
+                         VerticalScrollBarVisibility="Auto"
+                         Text="{Binding LastReceivedMessage}"/>
+                <TextBlock Text="Last Received Message Appearing Here."
                            Foreground="LightGray"
                            FontStyle="Italic"
                            Margin="8,6,0,0"
@@ -161,7 +167,7 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-            <TabControl Grid.Row="5" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,5,5,5"
+            <TabControl Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,5,5,5"
                         ItemsSource="{Binding TabItemModelCollection}"
                         SelectedItem="{Binding SelectedTabItemModel}">
                 <TabControl.ItemContainerStyle>

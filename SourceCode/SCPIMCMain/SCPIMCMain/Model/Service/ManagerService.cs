@@ -1,4 +1,8 @@
-namespace SCPIMCMain.Model.Logic;
+using SCPIMCMain.Common.Enum;
+using SCPIMCMain.Common.Logic;
+using SCPIMCMain.ViewModel.Controls;
+
+namespace SCPIMCMain.Model.Service;
 
 public class ManagerService<TKey, TValue> : Object where TKey : notnull where TValue : class
 {
@@ -18,7 +22,7 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
     {
         try
         {
-            TValue return_value = default(TValue);
+            TValue return_value;
             if (_internal_managed_item.TryGetValue(__key, out return_value))
             {
                 return return_value;
@@ -30,7 +34,7 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
         }
         catch (Exception ex)
         {
-            throw ex;
+            return null;
         }
     }
 
@@ -52,7 +56,7 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
         }
         catch (Exception ex)
         {
-            throw ex;
+            Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.ProgramLog).Func_Log($"Error get key-value pair: {ex.Message}");
 
             return null;
         }
@@ -66,7 +70,7 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
         }
         catch (Exception ex)
         {
-            throw ex;
+            Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.ProgramLog).Func_Log($"Error adding key value pair: {ex.Message}");
 
             return false;
         }
@@ -80,7 +84,7 @@ public class ManagerService<TKey, TValue> : Object where TKey : notnull where TV
         }
         catch (Exception ex)
         {
-            throw ex;
+            Singleton<ManagerService<ELogPanelKeys, LogPanelViewModel>>.Instance.Func_TryGetValue(ELogPanelKeys.ProgramLog).Func_Log($"Error remove key value pair: {ex.Message}");
 
             return false;
         }

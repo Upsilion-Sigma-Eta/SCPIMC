@@ -1,4 +1,5 @@
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using SCPIMCMain.Common.Enum;
@@ -129,6 +130,9 @@ namespace SCPIMCMain.Model.Implementation
                 {
                     _tcp_client = new TcpClient(IpAddress, Port);
 
+                    // SCPI 통신은 Nagle 알고리즘과 Delayed Ack 사용이 오히려 지연시간을 크게 증가시키기만 하는 방해요소로 작용할 수 있음.
+                    _tcp_client.NoDelay = true;
+
                     _connection_status = EDeviceConnectionStatus.Disconnected;
 
                     if (_tcp_client != null)
@@ -171,14 +175,8 @@ namespace SCPIMCMain.Model.Implementation
         {
             try
             {
-                if (IpAddress == null)
-                {
-                    _ip_address = __ipAddress;
-                }
-                if (Port == 0)
-                {
-                    _port = __port;
-                }
+                _ip_address = __ipAddress;
+                _port = __port;
 
                 EDeviceConnectionStatus result = await Func_ConnectAsync(__cts);
 
@@ -201,30 +199,38 @@ namespace SCPIMCMain.Model.Implementation
         {
             try
             {
-                if (_tcp_client == null)
+                if (_tcp_client is not null)
                 {
-                    _tcp_client = new TcpClient(IpAddress, Port);
-
-                    _connection_status = EDeviceConnectionStatus.Disconnected;
-
-                    if (_tcp_client != null)
+                    if (_tcp_client.Connected)
                     {
-                        _connection_status = EDeviceConnectionStatus.Connecting;
+                        await Func_DisconnectAsync(__cts);
+                    }
+                }
 
-                        await _tcp_client.ConnectAsync(IpAddress, Port);
+                _tcp_client = new TcpClient();
 
-                        if (_tcp_client.Connected)
-                        {
-                            _connection_status = EDeviceConnectionStatus.Connected;
+                // SCPI 통신은 Nagle 알고리즘과 Delayed Ack 사용이 오히려 지연시간을 크게 증가시키기만 하는 방해요소로 작용할 수 있음.
+                _tcp_client.NoDelay = true;
+                
+                _connection_status = EDeviceConnectionStatus.Disconnected;
 
-                            return _connection_status;
-                        }
-                        else
-                        {
-                            _connection_status = EDeviceConnectionStatus.Disconnected;
+                if (_tcp_client != null)
+                {
+                    _connection_status = EDeviceConnectionStatus.Connecting;
 
-                            return _connection_status;
-                        }
+                    await _tcp_client.ConnectAsync(IPAddress.Parse(IpAddress), Port);
+
+                    if (_tcp_client.Connected)
+                    {
+                        _connection_status = EDeviceConnectionStatus.Connected;
+
+                        return _connection_status;
+                    }
+                    else
+                    {
+                        _connection_status = EDeviceConnectionStatus.Disconnected;
+
+                        return _connection_status;
                     }
                 }
 
@@ -316,19 +322,20 @@ namespace SCPIMCMain.Model.Implementation
                     throw new Exception($"No connection made to host.");
                 }
 
-                if (_tcp_client.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is not null)
                 {
+                    NetworkStream stream = _tcp_client.GetStream();
                     if (stream.CanRead)
                     {
-                        byte[] buffer = new byte[1024];
-                        int readed_count = stream.Read(buffer, 0, 1024);
+                        byte[] buffer = new byte[16134];
+                        int readed_count = stream.Read(buffer, 0, 16134);
 
                         if (readed_count <= 0)
                         {
                             throw new Exception($"There is nothing to read.");
                         }
 
-                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readed_count);
+                        return Encoding.ASCII.GetString(buffer, 0, readed_count);
                     }
                 }
 
@@ -352,19 +359,21 @@ namespace SCPIMCMain.Model.Implementation
                     throw new Exception($"No connection made to host.");
                 }
 
-                if (_tcp_client.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is not null)
                 {
+                    NetworkStream stream = _tcp_client.GetStream();
                     if (stream.CanRead)
                     {
-                        byte[] buffer = new byte[1024];
-                        int readed_count = await stream.ReadAsync(buffer, 0, 1024);
+                        byte[] buffer = new byte[16134];
+                        int readed_count = await stream.ReadAsync(buffer, 0, 16134);
 
                         if (readed_count <= 0)
                         {
                             throw new Exception($"There is nothing to read.");
                         }
 
-                        return ASCIIEncoding.ASCII.GetString(buffer, 0, readed_count);
+                        string response_string = Encoding.ASCII.GetString(buffer, 0, readed_count);
+                        return response_string.Trim();
                     }
                 }
 
@@ -404,9 +413,10 @@ namespace SCPIMCMain.Model.Implementation
                     throw new Exception($"Not connected to host.");
                 }
 
-                if (_tcp_client.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is not null)
                 {
-                    stream.Write(UTF8Encoding.ASCII.GetBytes(__command));
+                    NetworkStream stream = _tcp_client.GetStream();
+                    stream.Write(Encoding.ASCII.GetBytes(__command));
                     stream.Flush();
                 }
             }
@@ -425,9 +435,10 @@ namespace SCPIMCMain.Model.Implementation
                     throw new Exception($"Not connected to host.");
                 }
 
-                if (_tcp_client.GetStream() is NetworkStream stream)
+                if (_tcp_client.GetStream() is not null)
                 {
-                    stream.WriteAsync(UTF8Encoding.ASCII.GetBytes(__command));
+                    NetworkStream stream = _tcp_client.GetStream();
+                    stream.WriteAsync(Encoding.ASCII.GetBytes(__command));
                     stream.FlushAsync();
                 }
             }

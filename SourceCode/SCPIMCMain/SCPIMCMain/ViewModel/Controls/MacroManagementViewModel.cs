@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
-using Newtonsoft.Json;
 using SCPIMCMain.Common.Logic;
 using SCPIMCMain.Model.Implementation;
 using SCPIMCMain.View.Controls;
@@ -10,7 +9,7 @@ namespace SCPIMCMain.ViewModel.Controls;
 
 public class MacroManagementViewModel : NotifyPropertyChanged
 {
-    private const string MACRO_DIRECTORY = "./Macros";
+    private const string CONST_MACRO_DIRECTORY = "./Macros";
 
     public MacroManagementViewModel()
     {
@@ -141,13 +140,13 @@ public class MacroManagementViewModel : NotifyPropertyChanged
             dialog.ShowDialog();
 
             // 사용자가 저장을 선택한 경우
-            if (dialog.DialogResult_Success)
+            if (dialog.DialogResultSuccess)
             {
                 var new_macro = editor_view_model.Func_CreateMacroModel();
                 MacroModels.Add(new_macro);
 
                 // 파일로 저장
-                new_macro.Func_SaveToFile(MACRO_DIRECTORY);
+                new_macro.Func_SaveToFile(CONST_MACRO_DIRECTORY);
             }
         }
         catch (Exception ex)
@@ -167,7 +166,7 @@ public class MacroManagementViewModel : NotifyPropertyChanged
             }
 
             // 파일 삭제
-            string file_path = _selected_macro.Func_GetFilePath(MACRO_DIRECTORY);
+            string file_path = _selected_macro.Func_GetFilePath(CONST_MACRO_DIRECTORY);
             if (File.Exists(file_path))
             {
                 File.Delete(file_path);
@@ -201,10 +200,10 @@ public class MacroManagementViewModel : NotifyPropertyChanged
             dialog.ShowDialog();
 
             // 사용자가 저장을 선택한 경우
-            if (dialog.DialogResult_Success)
+            if (dialog.DialogResultSuccess)
             {
                 // 기존 파일 삭제 (이름이 변경될 수 있으므로)
-                string old_file_path = _selected_macro.Func_GetFilePath(MACRO_DIRECTORY);
+                string old_file_path = _selected_macro.Func_GetFilePath(CONST_MACRO_DIRECTORY);
                 if (File.Exists(old_file_path))
                 {
                     File.Delete(old_file_path);
@@ -214,7 +213,7 @@ public class MacroManagementViewModel : NotifyPropertyChanged
                 editor_view_model.Func_UpdateMacroModel(_selected_macro);
 
                 // 새 파일로 저장
-                _selected_macro.Func_SaveToFile(MACRO_DIRECTORY);
+                _selected_macro.Func_SaveToFile(CONST_MACRO_DIRECTORY);
 
                 // UI 업데이트를 위해 프로퍼티 변경 알림
                 OnPropertyChangedEventHandler(this, nameof(MacroModels));
@@ -236,7 +235,7 @@ public class MacroManagementViewModel : NotifyPropertyChanged
                 return;
             }
 
-            string file_path = _selected_macro.Func_GetFilePath(MACRO_DIRECTORY);
+            string file_path = _selected_macro.Func_GetFilePath(CONST_MACRO_DIRECTORY);
 
             if (File.Exists(file_path))
             {
@@ -310,14 +309,14 @@ public class MacroManagementViewModel : NotifyPropertyChanged
         try
         {
             // 디렉토리가 존재하지 않으면 생성
-            if (!Directory.Exists(MACRO_DIRECTORY))
+            if (!Directory.Exists(CONST_MACRO_DIRECTORY))
             {
-                Directory.CreateDirectory(MACRO_DIRECTORY);
+                Directory.CreateDirectory(CONST_MACRO_DIRECTORY);
                 return;
             }
 
             // 모든 JSON 파일 로드
-            var json_files = Directory.GetFiles(MACRO_DIRECTORY, "*.json");
+            var json_files = Directory.GetFiles(CONST_MACRO_DIRECTORY, "*.json");
 
             foreach (var file_path in json_files)
             {

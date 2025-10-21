@@ -16,4 +16,9 @@ public class FileSaverAndLoaderService
     {
         return System.IO.Path.Combine(".", "Logs", $"{__logType}.log");
     }
+
+    public static string Func_GetSettingsFilePath()
+    {
+        return System.IO.Path.Combine(".", "Settings", "appsettings.json");
+    }
 }

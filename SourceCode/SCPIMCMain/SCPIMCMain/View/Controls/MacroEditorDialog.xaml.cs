@@ -9,7 +9,7 @@ namespace SCPIMCMain.View.Controls
     public partial class MacroEditorDialog : Window
     {
         public MacroEditorViewModel ViewModel { get; private set; }
-        public bool DialogResult_Success { get; private set; }
+        public bool DialogResultSuccess { get; private set; }
 
         public MacroEditorDialog(MacroEditorViewModel __viewModel)
         {
@@ -22,10 +22,10 @@ namespace SCPIMCMain.View.Controls
 
             ViewModel = __viewModel;
             DataContext = ViewModel;
-            DialogResult_Success = false;
+            DialogResultSuccess = false;
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void SaveButton_Click(object __sender, RoutedEventArgs __e)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace SCPIMCMain.View.Controls
                     return;
                 }
 
-                DialogResult_Success = true;
+                DialogResultSuccess = true;
                 this.Close();
             }
             catch (Exception ex)
@@ -52,9 +52,9 @@ namespace SCPIMCMain.View.Controls
             }
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(object __sender, RoutedEventArgs __e)
         {
-            DialogResult_Success = false;
+            DialogResultSuccess = false;
             this.Close();
         }
     }

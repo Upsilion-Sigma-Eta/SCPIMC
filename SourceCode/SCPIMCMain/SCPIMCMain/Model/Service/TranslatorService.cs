@@ -1,6 +1,6 @@
 using SCPIMCMain.Common.Enum;
 
-namespace SCPIMCMain.Model.Logic;
+namespace SCPIMCMain.Model.Service;
 
 public static class TranslatorService
 {
